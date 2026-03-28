@@ -129,6 +129,10 @@ body::-webkit-scrollbar-thumb:hover {
     flex-shrink: 0;
 }
 
+.header-text {
+    flex: 1;
+}
+
 .header-text h1 {
     font-size: 17px;
     font-weight: 700;
@@ -144,6 +148,255 @@ body::-webkit-scrollbar-thumb:hover {
     color: var(--text-secondary);
     font-weight: 400;
     margin-top: 2px;
+    transition: color var(--transition);
+}
+
+/* ===== Sync Button ===== */
+.btn-sync {
+    width: 34px;
+    height: 34px;
+    border-radius: 10px;
+    background: var(--bg-card);
+    border: 1px solid var(--glass-border);
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all var(--transition);
+    flex-shrink: 0;
+}
+
+.btn-sync:hover {
+    background: var(--accent-dim);
+    border-color: rgba(167, 139, 250, 0.3);
+    color: var(--accent);
+}
+
+.btn-sync.spinning svg {
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+/* ===== Token Section (Setup) ===== */
+.token-section {
+    margin-bottom: 16px;
+}
+
+.token-card {
+    background: var(--bg-card);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius);
+    padding: 24px 20px;
+    text-align: center;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+}
+
+.token-icon {
+    width: 56px;
+    height: 56px;
+    border-radius: 16px;
+    background: var(--accent-dim);
+    border: 1px solid rgba(167, 139, 250, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 16px;
+}
+
+.token-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 6px;
+    letter-spacing: -0.2px;
+}
+
+.token-desc {
+    font-size: 12px;
+    color: var(--text-muted);
+    line-height: 1.5;
+    margin-bottom: 20px;
+}
+
+.btn-generate {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    padding: 10px 0;
+    font-family: 'Inter', sans-serif;
+    font-size: 12.5px;
+    font-weight: 600;
+    color: #fff;
+    background: linear-gradient(135deg, #a78bfa 0%, #6366f1 100%);
+    border: none;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: all var(--transition);
+    letter-spacing: 0.2px;
+}
+
+.btn-generate:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 16px rgba(167, 139, 250, 0.3);
+}
+
+.btn-generate:active {
+    transform: scale(0.98);
+}
+
+.btn-generate:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+.token-divider {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 16px 0;
+}
+
+.token-divider::before,
+.token-divider::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: var(--glass-border);
+}
+
+.token-divider span {
+    font-size: 11px;
+    color: var(--text-muted);
+    white-space: nowrap;
+}
+
+.token-input-row {
+    display: flex;
+    gap: 8px;
+}
+
+.token-input {
+    flex: 1;
+    padding: 9px 14px;
+    font-family: 'Inter', monospace;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--text-primary);
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-sm);
+    outline: none;
+    transition: all var(--transition);
+}
+
+.token-input:focus {
+    border-color: rgba(167, 139, 250, 0.4);
+    box-shadow: 0 0 0 3px rgba(167, 139, 250, 0.1);
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.token-input::placeholder {
+    color: var(--text-muted);
+    text-transform: none;
+    letter-spacing: 0;
+    font-weight: 400;
+}
+
+.btn-link {
+    padding: 9px 18px;
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--accent);
+    background: var(--accent-dim);
+    border: 1px solid rgba(167, 139, 250, 0.2);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: all var(--transition);
+    white-space: nowrap;
+}
+
+.btn-link:hover {
+    background: rgba(167, 139, 250, 0.25);
+    border-color: rgba(167, 139, 250, 0.4);
+}
+
+.btn-link:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* ===== Token Display (Active) ===== */
+.token-display {
+    margin-bottom: 14px;
+}
+
+.token-display-inner {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    background: var(--bg-card);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-sm);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+}
+
+.token-label {
+    font-size: 10.5px;
+    font-weight: 500;
+    color: var(--text-muted);
+    white-space: nowrap;
+}
+
+.token-value {
+    flex: 1;
+    font-family: 'Inter', monospace;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 2.5px;
+    color: var(--accent);
+}
+
+.btn-copy,
+.btn-disconnect {
+    width: 28px;
+    height: 28px;
+    border-radius: 7px;
+    background: transparent;
+    border: 1px solid transparent;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all var(--transition);
+    flex-shrink: 0;
+}
+
+.btn-copy:hover {
+    background: var(--accent-dim);
+    border-color: rgba(167, 139, 250, 0.2);
+    color: var(--accent);
+}
+
+.btn-disconnect:hover {
+    background: var(--danger-dim);
+    border-color: rgba(248, 113, 113, 0.2);
+    color: var(--danger);
 }
 
 /* ===== List ===== */

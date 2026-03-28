@@ -31,6 +31,40 @@ function extractSubmissions(htmlText, courseName) {
     return results;
 }
 
+// ─── Supabase Sync ────────────────────────────────────────
+
+async function syncToCloud(submissions) {
+    try {
+        const result = await chrome.storage.local.get(TOKEN_STORAGE_KEY);
+        const token = result[TOKEN_STORAGE_KEY];
+
+        if (!token || !SUPABASE_CONFIG || SUPABASE_CONFIG.URL.includes("YOUR_PROJECT_ID")) {
+            return; // No token or not configured
+        }
+
+        const response = await fetch(SUPABASE_FUNCTIONS.SYNC_SUBMISSIONS, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "apikey": SUPABASE_CONFIG.ANON_KEY,
+                "Authorization": `Bearer ${SUPABASE_CONFIG.ANON_KEY}`,
+            },
+            body: JSON.stringify({ token, submissions }),
+        });
+
+        const data = await response.json();
+
+        if (data.success && data.submissions) {
+            // Update local storage with cloud data
+            await chrome.storage.local.set({ [STORAGE_KEY]: data.submissions });
+            return data.submissions;
+        }
+    } catch (err) {
+        console.error("Cloud sync failed (offline mode):", err);
+    }
+    return null;
+}
+
 // Scan links and fetch submissions
 async function processLinks() {
     const anchors = document.querySelectorAll("a[href*='/student/course/info/']");
@@ -59,6 +93,13 @@ async function processLinks() {
     }
 
     await chrome.storage.local.set({ [STORAGE_KEY]: stored });
+
+    // Sync to cloud after local save
+    const cloudData = await syncToCloud(stored);
+    if (cloudData) {
+        stored = cloudData;
+    }
+
     return stored;
 }
 
@@ -108,7 +149,7 @@ function buildPanelHTML(data) {
                 </div>
                 <span class="pst-due-badge ${u.cls}">${u.label}</span>
             </div>
-            <button class="pst-btn-done" data-index="${i}">
+            <button class="pst-btn-done" data-index="${i}" data-id="${item.id || ''}">
                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
                 Mark as Submitted
             </button>
@@ -138,12 +179,32 @@ function renderPanel(data) {
     listEl.querySelectorAll(".pst-btn-done").forEach(btn => {
         btn.onclick = async () => {
             const idx = parseInt(btn.getAttribute("data-index"));
+            const submissionId = btn.getAttribute("data-id");
             const card = btn.closest(".pst-card");
             card.style.transition = "all 0.3s ease";
             card.style.opacity = "0";
             card.style.transform = "translateX(30px) scale(0.95)";
 
             setTimeout(async () => {
+                // Mark in cloud
+                try {
+                    const tokenResult = await chrome.storage.local.get(TOKEN_STORAGE_KEY);
+                    const token = tokenResult[TOKEN_STORAGE_KEY];
+                    if (token && submissionId) {
+                        await fetch(SUPABASE_FUNCTIONS.MARK_SUBMITTED, {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json",
+                                "apikey": SUPABASE_CONFIG.ANON_KEY,
+                                "Authorization": `Bearer ${SUPABASE_CONFIG.ANON_KEY}`,
+                            },
+                            body: JSON.stringify({ token, submission_key: submissionId }),
+                        });
+                    }
+                } catch (err) {
+                    console.error("Cloud mark-submitted failed:", err);
+                }
+
                 const res = await chrome.storage.local.get(STORAGE_KEY);
                 let d = cleanExpired(res[STORAGE_KEY] || []);
                 d.splice(idx, 1);
