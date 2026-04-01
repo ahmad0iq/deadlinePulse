@@ -1,0 +1,24 @@
+# Dependencies
+node_modules/
+mobile-app/node_modules/
+
+# IDE / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Secrets & Local Configuration
+# Users must provide their own env.js locally as per the README
+*.env
+.env.*
+.env
+env.js
+
+# Exclude backend and mobile app (Publishing Extension ONLY)
+supabase/
+mobile-app/
+SETUP_GUIDE.md
+
+# Misc
+*.log

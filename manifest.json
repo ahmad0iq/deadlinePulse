@@ -33,6 +33,7 @@
                 "*://horizon.ucp.edu.pk/*"
             ],
             "js": [
+                "env.js",
                 "supabase-config.js",
                 "content.js"
             ],
