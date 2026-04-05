@@ -15,6 +15,10 @@ function extractSubmissions(htmlText, courseName) {
     const results = [];
 
     rows.forEach(row => {
+        // Only consider submissions that still have an Upload button (i.e. pending)
+        const hasUploadButton = row.querySelector(".upload_submission");
+        if (!hasUploadButton) return;
+
         const title = row.querySelector(".rec_submission_title")?.textContent.trim();
         const dueDate = row.querySelector(".rec_submission_due_date")?.textContent.trim();
 
@@ -72,6 +76,9 @@ async function processLinks() {
     const result = await chrome.storage.local.get(STORAGE_KEY);
     let stored = cleanExpired(result[STORAGE_KEY] || []);
 
+    // Track all submission IDs that are currently pending on the site (have Upload button)
+    const pendingOnSite = new Set();
+
     for (let a of anchors) {
         const url = a.getAttribute("href");
         const courseName = a.innerText.trim().split("\n")[0].trim();
@@ -83,6 +90,7 @@ async function processLinks() {
             const submissions = extractSubmissions(html, courseName);
 
             submissions.forEach(sub => {
+                pendingOnSite.add(sub.id);
                 if (!stored.find(s => s.id === sub.id)) {
                     stored.push(sub);
                 }
@@ -92,12 +100,20 @@ async function processLinks() {
         }
     }
 
+    // Remove submissions that are no longer pending on the site
+    // (i.e. the Upload button is gone, meaning they were submitted on the site)
+    if (pendingOnSite.size > 0) {
+        stored = stored.filter(s => pendingOnSite.has(s.id));
+    }
+
     await chrome.storage.local.set({ [STORAGE_KEY]: stored });
 
     // Sync to cloud after local save
     const cloudData = await syncToCloud(stored);
     if (cloudData) {
+        // Cloud is the source of truth — use its data
         stored = cloudData;
+        await chrome.storage.local.set({ [STORAGE_KEY]: stored });
     }
 
     return stored;
