@@ -372,6 +372,7 @@ body::-webkit-scrollbar-thumb:hover {
 }
 
 .btn-copy,
+.btn-qr,
 .btn-disconnect {
     width: 28px;
     height: 28px;
@@ -387,7 +388,8 @@ body::-webkit-scrollbar-thumb:hover {
     flex-shrink: 0;
 }
 
-.btn-copy:hover {
+.btn-copy:hover,
+.btn-qr:hover {
     background: var(--accent-dim);
     border-color: rgba(167, 139, 250, 0.2);
     color: var(--accent);
@@ -591,3 +593,69 @@ body::-webkit-scrollbar-thumb:hover {
 .card:nth-child(6) { animation-delay: 0.30s; }
 .card:nth-child(7) { animation-delay: 0.36s; }
 .card:nth-child(8) { animation-delay: 0.42s; }
+
+/* ===== QR Modal ===== */
+.qr-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.qr-modal-backdrop {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(10, 10, 15, 0.85); /* Deep base with opacity */
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+}
+
+.qr-card {
+    position: relative;
+    z-index: 101;
+    background: var(--bg-card);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius);
+    padding: 24px;
+    text-align: center;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    width: 220px;
+    animation: cardIn 0.35s ease-out both;
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(167, 139, 250, 0.08);
+}
+
+.qr-container-bg {
+    background: #ffffff;
+    padding: 12px;
+    border-radius: 12px;
+    display: inline-block;
+    margin-bottom: 20px;
+}
+
+#qrcode-container img {
+    display: block;
+    width: 140px;
+    height: 140px;
+}
+
+.qr-text {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: var(--text-primary);
+    margin-bottom: 16px;
+}
+
+#btn-qr-close {
+    width: 100%;
+    padding: 8px 0;
+}

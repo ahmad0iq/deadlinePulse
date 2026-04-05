@@ -96,6 +96,18 @@
             <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
           </svg>
         </button>
+        <button class="btn-qr" id="btn-qr" title="Show QR code">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="3" width="7" height="7"/>
+            <rect x="14" y="3" width="7" height="7"/>
+            <rect x="14" y="14" width="7" height="7"/>
+            <rect x="3" y="14" width="7" height="7"/>
+            <rect x="6" y="6" width="1" height="1"/>
+            <rect x="17" y="6" width="1" height="1"/>
+            <rect x="17" y="17" width="1" height="1"/>
+            <rect x="6" y="17" width="1" height="1"/>
+          </svg>
+        </button>
         <button class="btn-disconnect" id="btn-disconnect" title="Disconnect token">
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <line x1="18" y1="6" x2="6" y2="18"/>
@@ -107,10 +119,23 @@
 
     <!-- Submission List -->
     <div id="list" class="list"></div>
+
+    <!-- QR Code Modal (Hidden by default) -->
+    <div id="qr-modal" class="qr-modal" style="display: none;">
+      <div class="qr-modal-backdrop" id="qr-modal-backdrop"></div>
+      <div class="qr-card">
+        <div class="qr-container-bg">
+          <div id="qrcode-container"></div>
+        </div>
+        <p class="qr-text">SCAN WITH MOBILE APP</p>
+        <button class="btn-generate" id="btn-qr-close">Dismiss</button>
+      </div>
+    </div>
   </div>
 
   <script src="env.js"></script>
   <script src="supabase-config.js"></script>
+  <script src="qrcode.min.js"></script>
   <script src="popup.js"></script>
 </body>
 </html>

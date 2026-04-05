@@ -378,6 +378,42 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
+    // QR Code Modal
+    const qrModal = document.getElementById("qr-modal");
+    let qrGenerator = null;
+
+    document.getElementById("btn-qr").addEventListener("click", () => {
+        const token = document.getElementById("token-value").textContent;
+        // Don't generate if no token
+        if (token === "—" || !token) return;
+
+        // Clear existing QR code if any
+        const qrContainer = document.getElementById("qrcode-container");
+        qrContainer.innerHTML = "";
+
+        // Generate new QR Code
+        qrGenerator = new QRCode(qrContainer, {
+            text: token,
+            width: 140,
+            height: 140,
+            colorDark: "#000000",
+            colorLight: "#ffffff",
+            correctLevel: QRCode.CorrectLevel.H
+        });
+
+        // Show Modal
+        qrModal.style.display = "flex";
+    });
+
+    // Dismiss Modal
+    document.getElementById("btn-qr-close").addEventListener("click", () => {
+        qrModal.style.display = "none";
+    });
+
+    document.getElementById("qr-modal-backdrop").addEventListener("click", () => {
+        qrModal.style.display = "none";
+    });
+
     // Sync Button
     document.getElementById("btn-sync").addEventListener("click", async () => {
         const btn = document.getElementById("btn-sync");
